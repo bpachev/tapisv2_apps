@@ -28,8 +28,8 @@ module load ${custom_modules}
 module list
 log INFO "Staring Pylauncher Application"
 
-# Unzip job inptus directory into job directory
-unzip ${job_inputs} 
+# Unzip job inputs directory into job directory
+[ -e $job_inputs ] && unzip ${job_inputs}
 
 # Make sure generator script exists
 if [ ! -e generator.sh ]

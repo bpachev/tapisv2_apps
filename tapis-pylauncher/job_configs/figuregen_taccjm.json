@@ -1,0 +1,19 @@
+{
+  "name": "pylauncher-figuregen",
+  "appId": "{{ app.name }}",
+  "nodeCount": 10,
+  "processorsPerNode": 32,
+  "queue": "normal",
+  "memoryPerNode": "2",
+  "maxRunTime": "04:00:00",
+  "allocation": "TG-DMS080016N",
+  "archive": true,
+  "inputs": {
+            "job_inputs":  "/home/benjamin/research/chg/tapisv2_apps/tapis-pylauncher/job_configs/figuregen"
+          },
+  "parameters": {
+    "custom_modules": "python3 tacc-singularity",
+    "pylauncher_input": "jobs_list.json",
+    "compress_outputs": "false"
+  }
+}

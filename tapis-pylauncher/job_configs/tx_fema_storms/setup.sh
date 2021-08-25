@@ -26,12 +26,12 @@ mkdir -p logs/runs                        # log files for each storm run
 mkdir -p storms                           # links to storm wind/press files go here
 mkdir -p mesh                             # adcirc files common to all runs go here
 
-# These are the hard-coded directories where the actual wind data and mesh data resides
+# These are the directories where the actual wind data and mesh data resides
 # Note these are in scratch not in corral, since execution nodes can't access corral. 
 # They have been pre-staged prior to running this from within Stampede2 using rsync. 
-STORM_DATA_DIR="/scratch/06307/clos21/TX_FEMA_Storms/winds"
-MESH_DATA_DIR="/scratch/06307/clos21/TX_FEMA_Stos/test_mesh"
-EXECS_DIR="/scratch/06307/clos21/TX_FEMA_Storms/execs/v55.00/stampede2"
+STORM_DATA_DIR="/scratch/08009/bpachev/fema-data/winds"
+MESH_DATA_DIR="/scratch/08009/bpachev/fema-data/ashutosh_mesh"
+EXECS_DIR="/scratch/08009/bpachev/fema-data/execs/v55.00/stampede2"
 
 cd storms
 ln -s $STORM_DATA_DIR/* .

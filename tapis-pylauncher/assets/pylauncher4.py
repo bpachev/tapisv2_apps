@@ -818,7 +818,15 @@ class Task:
         if len(kwargs)>0:
             raise LauncherException("Unprocessed Task.start_on_nodes args: %s" % str(kwargs))
         # wrap with stamp detector
-        wrapped = self.line_with_completion()
+        if self.post_process is None:
+            wrapped = self.line_with_completion()
+        else:
+            wrapped = self.get_fixed_command()
+            # I the post process is not None, then we should attach completion to the post process
+            # Because otherwise the job may terminate before the prost processing completes
+            # In all honesty though, post processing should be handled as a separate job with a dependency
+            self.post_process = self.completion.attach(self.post_process)
+
         DebugTraceMsg(
             "starting task %d of size %d on <<%s>>\nin cwd=<<%s>>\ncmd=<<%s>>" % \
                 (self.taskid,self.size,str(self.pool),os.getcwd(),wrapped),
@@ -829,9 +837,12 @@ class Task:
         self.has_started = True
         DebugTraceMsg("started %d" % self.taskid,self.debug,prefix="Task")
 
+    def get_fixed_command(self):
+        return re.sub("PYL_ID", str(self.taskid), self.command)
+
     def line_with_completion(self):
         """Return the task's commandline with completion attached"""
-        line = re.sub("PYL_ID", str(self.taskid), self.command)
+        line = self.get_fixed_command()
         return self.completion.attach(line)
 
     def isRunning(self):
@@ -987,9 +998,8 @@ class Commandline:
         return self.data.get(ind)
 
     def __str__(self):
-        r = "command=<<%s>>, cores=%d, pre_process=<<%s>>, post_process=<<%s>>" \
-            % (self.data["command"], self.data["cores"], self.data["pre_process"], self.data["post_process"])
-        return r
+        return (f'command=<<{self.data["command"]}>>, cores={self.data["cores"]},' +
+            f' pre_process=<<{self.data.get("pre_process")}>>, post_process=<<{self.data.get("post_process")}>>' )
 
 
 class CommandlineGenerator:
